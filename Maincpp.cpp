@@ -1,9 +1,9 @@
-#include <iostream>
+#include <iostream>q
 #include <iomanip>
 #include <cstdlib>
 #include <string> 
 #include "Person.h"
-#include <vector>
+#include <map>
 using namespace std;
 
 //Author: Jacob R. Holcomb
@@ -13,12 +13,21 @@ using namespace std;
 
 void initializeTree();
 void printIntro();
+void addPerson(map<string,Person>& familyTree, string key, Person& currentPerson);
 
 int main(int argCount, char *argValues[]) {
-	vector<Person> familyTree;
+	map <string, Person> familyTree;
 	Person currentPerson;
 	string currentCommand, selectedPerson;
 	printIntro();
+
+	Person mother = Person();
+	mother.setFirstName("Jenny");
+	addPerson(familyTree, "A", mother);
+	
+	Person search = familyTree.find("A")->second;
+
+	cout << "a => " <<  search.getFirstName() << '\n';
 
 	currentCommand = " ";
 	while (currentCommand != "Q") {
@@ -64,4 +73,8 @@ void printIntro() {
 	cout << "*   I - List immediate family (parents and siblings)" << endl;
 	cout << "*   D - List the number of children, grandchildren and great grandchildren" << endl;
 	cout << "*   Q - Quit the application" << endl;
+}
+
+void addPerson(map<string,Person>& familyTree, string key, Person& currentPerson) {
+	familyTree[key] = currentPerson;
 }
