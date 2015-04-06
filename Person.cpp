@@ -46,7 +46,11 @@ void Person::setFather(Person& father) {
 	this->father = &father;
 }
 
-//Defines the Print Function for Author, prints a table.
+void Person::addChild(Person& child) {
+	this->children.push_back(&child);
+}
+
+//Defines the Print Function for Person, prints a table.
 void Person::printInfo() {
 	const int stdColumnWidth = 10;
     cout << left << setw(stdColumnWidth + 5) << firstName;

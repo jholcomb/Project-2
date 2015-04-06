@@ -1,4 +1,4 @@
-#include <iostream>q
+#include <iostream>
 #include <iomanip>
 #include <cstdlib>
 #include <string> 
@@ -14,6 +14,7 @@ using namespace std;
 void initializeTree();
 void printIntro();
 void addPerson(map<string,Person>& familyTree, string key, Person& currentPerson);
+Person createRelative();
 
 int main(int argCount, char *argValues[]) {
 	map <string, Person> familyTree;
@@ -21,28 +22,22 @@ int main(int argCount, char *argValues[]) {
 	string currentCommand, selectedPerson;
 	printIntro();
 
-	Person mother = Person();
-	mother.setFirstName("Jenny");
-	addPerson(familyTree, "A", mother);
-	
-	Person search = familyTree.find("A")->second;
-
-	cout << "a => " <<  search.getFirstName() << '\n';
-
 	currentCommand = " ";
 	while (currentCommand != "Q") {
 	  cout << endl << "What person would you like to modify (first name, last name, birthday)?"; 
 	  getline(cin, selectedPerson);
 
+	  currentPerson = familyTree.find("selectedPerson")->second;
+
 	  cout << endl << "Command> ";
 	  getline(cin, currentCommand);
 
 	  if (currentCommand == "M") {
-		 
+		 currentPerson.setMother(createRelative());
 	  } else if (currentCommand == "F") {
-		 
+		 currentPerson.setFather(createRelative());
 	  } else if (currentCommand == "C") {
-	     
+	     currentPerson.addChild(createRelative());
 	  } else if (currentCommand == "I") {
 
 	  } else if (currentCommand == "D") {
@@ -78,3 +73,48 @@ void printIntro() {
 void addPerson(map<string,Person>& familyTree, string key, Person& currentPerson) {
 	familyTree[key] = currentPerson;
 }
+
+Person createRelative() {
+	string firstName, middleName, lastName;
+	string birthDate, deathDate, gender;
+	Person relative;
+
+	firstName = lastName = birthDate = "";
+
+	cout << endl << "-------------------" << endl;
+	cout << endl << "| Creating Parent |" << endl;
+	cout << endl << "-------------------" << endl;
+
+	while (firstName == "") {
+		cout << endl << "First Name: ";
+		getline(cin, firstName);
+	}
+
+	cout << "Middle Name: ";
+	getline(cin, middleName);
+
+	while (lastName == "") {
+		cout << "Last Name: ";
+		getline(cin, lastName);
+	}
+
+	while (birthDate == "") {
+		cout << "Birth Date: ";
+		getline(cin, birthDate);
+	}
+	
+	cout << "Date of Death: ";
+	getline(cin, deathDate);
+	cout << "Gender: ";
+	getline(cin, gender);
+
+	relative.setFirstName(firstName);
+	relative.setMiddleName(middleName);
+	relative.setLastName(lastName);
+	relative.setBirthDate(birthDate);
+	relative.setDeathDate(deathDate);
+	relative.setGender(gender);
+
+	return relative;
+}
+

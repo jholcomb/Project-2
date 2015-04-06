@@ -1,6 +1,7 @@
 #ifndef __PERSON_H__
 #define __PERSON_H__
 #include <string>
+#include <vector>
 using namespace std;
 
 //Author: Jacob R. Holcomb
@@ -13,12 +14,13 @@ private:
 	string firstName, middleName, lastName;
 	string birthDate, deathDate, gender;
 	Person *mother, *father;
+	vector<Person*> children;
 
 public:
 	//Default Constructor
 	Person();
 	
-	//Set Functions for Author
+	//Set Functions for Person
 	void setFirstName(string firstName);
 	void setMiddleName(string middleName);
 	void setLastName(string lastName);
@@ -27,11 +29,12 @@ public:
 	void setGender(string gender);
 	void setMother(Person& mother);
 	void setFather(Person& father);
+	void addChild(Person& child);
 
-	//Print Function for Author
+	//Print Function for Person
 	void printInfo();
 
-	//Get Functions for Author
+	//Get Functions for Person
 	string getFirstName()  { return firstName;}
 	string getLastName()   { return lastName;}
 	string getMiddleName() { return middleName;}
@@ -40,6 +43,7 @@ public:
 	string getGender()     { return gender;}
 	Person getMother()     { return *mother;}
 	Person getFather()     { return *father;}
+	vector<Person*>* getChildren() { return &children;}
 };
  
 #endif
