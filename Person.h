@@ -12,8 +12,7 @@ class Person {
 private:
 	string firstName, middleName, lastName;
 	string birthDate, deathDate, gender;
-	string mother, father;
-
+	Person *mother, *father;
 
 public:
 	//Default Constructor
@@ -26,6 +25,8 @@ public:
 	void setBirthDate(string birthDate);
 	void setDeathDate(string deathDate);
 	void setGender(string gender);
+	void setMother(Person& mother);
+	void setFather(Person& father);
 
 	//Print Function for Author
 	void printInfo();
@@ -37,6 +38,8 @@ public:
 	string getBirthDate()  { return birthDate;}
 	string getDeathDate()  { return deathDate;}
 	string getGender()     { return gender;}
+	Person getMother()     { return *mother;}
+	Person getFather()     { return *father;}
 };
  
 #endif
