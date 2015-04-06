@@ -11,18 +11,57 @@ using namespace std;
 //Assignment: Project 2
 //Description: Maintains a Family Tree of People
 
+void initializeTree();
+void printIntro();
+
 int main(int argCount, char *argValues[]) {
-Person currentPerson, mother, father;
-currentPerson = Person();
-mother = Person();
-father = Person();
+	vector<Person> familyTree;
+	Person currentPerson;
+	string currentCommand, selectedPerson;
+	printIntro();
 
-mother.setFirstName("Jenny");
-father.setFirstName("Kyle");
+	currentCommand = " ";
+	while (currentCommand != "Q") {
+	  cout << endl << "What person would you like to modify (first name, last name, birthday)?"; 
+	  getline(cin, selectedPerson);
 
-currentPerson.setMother(mother);
-currentPerson.setFather(father);
+	  cout << endl << "Command> ";
+	  getline(cin, currentCommand);
 
-cout << currentPerson.getMother().getFirstName() << endl;
-cout << currentPerson.getFather().getFirstName() << endl;
+	  if (currentCommand == "M") {
+		 
+	  } else if (currentCommand == "F") {
+		 
+	  } else if (currentCommand == "C") {
+	     
+	  } else if (currentCommand == "I") {
+
+	  } else if (currentCommand == "D") {
+		
+	  } else if (currentCommand == "Q") {
+		 cout << endl << "Family Tree Manager Shutting Down..." << endl;
+	  } else
+		 cout << endl << "Invalid Command" << endl;
+	}
+	return EXIT_SUCCESS;
+}
+
+//Initializes Tree based on the given structure of a text file
+//This structure follows the scheme setup by Dr. Heuring.
+//The code here adheres to this structure and parses strings
+//accordingly.
+void initializeTree() {
+
+}
+
+//Prints the Family Tree Manager Introduction
+void printIntro() {
+	cout << "Welcome to Jake's Family Tree Manager Version 1.0" << endl;
+	cout << endl << "The following commands can be used:" << endl;
+	cout << "*   M - Add a person's mother" << endl;
+	cout << "*   F - Add a person's father" << endl;
+	cout << "*   C - Add a person's child" << endl;
+	cout << "*   I - List immediate family (parents and siblings)" << endl;
+	cout << "*   D - List the number of children, grandchildren and great grandchildren" << endl;
+	cout << "*   Q - Quit the application" << endl;
 }
