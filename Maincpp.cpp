@@ -18,35 +18,66 @@ Person createRelative();
 
 int main(int argCount, char *argValues[]) {
 	map <string, Person> familyTree;
+	map<string, Person>::iterator it;
 	Person currentPerson;
-	string currentCommand, selectedPerson;
+	string currentCommand, selectedPerson, response;
+	string firstName, lastName, birthDate;
 	printIntro();
 
+	it = familyTree.end();
 	currentCommand = " ";
 	while (currentCommand != "Q") {
-	  cout << endl << "What person would you like to modify (first name, last name, birthday)?"; 
-	  getline(cin, selectedPerson);
+		cout << endl << "What person would you like to modify (first name, last name, birthday)?"; 
+		getline(cin, selectedPerson);
 
-	  currentPerson = familyTree.find("selectedPerson")->second;
+		//A user can quit by entering Q in the first prompt as well
+		if (selectedPerson == "Q")
+			break;
 
-	  cout << endl << "Command> ";
-	  getline(cin, currentCommand);
+		// Stage One - Selecting the Person to edit in the Family Tree
+		// Case 1 - The Person was found and we continue about our way.
+		// Case 2 - The Person is not found and we provide an alternative creation method.
 
-	  if (currentCommand == "M") {
-		 currentPerson.setMother(createRelative());
-	  } else if (currentCommand == "F") {
-		 currentPerson.setFather(createRelative());
-	  } else if (currentCommand == "C") {
-	     currentPerson.addChild(createRelative());
-	  } else if (currentCommand == "I") {
+		//Stage One (Case 2)
+		it = familyTree.find(selectedPerson);
+		if (it == familyTree.end()) {
+			cout << endl << "Person does not exist!!! Would you like to create them??? (y or n):";
+			getline(cin, response);
+			if (response == "y" || response == "Y") {
+				currentPerson = createRelative();
+				firstName = currentPerson.getFirstName();
+				lastName  = currentPerson.getLastName();
+				birthDate = currentPerson.getBirthDate();
+				familyTree[firstName + ", " + lastName + ", " + birthDate] = currentPerson;
+				currentCommand = "";
+			} else
+				//Restart the Loop, there was an error and the user did not wish to correct is
+				//by creating a new user
+				currentCommand = "";
+				continue;
 
-	  } else if (currentCommand == "D") {
+		//Stage One (Case 1)
+		} else {
+			currentPerson = it->second;
+			cout << endl << "Command> ";
+			getline(cin, currentCommand);
+		}
+
+		if (currentCommand == "M") {
+			currentPerson.setMother(createRelative());
+		} else if (currentCommand == "F") {
+			currentPerson.setFather(createRelative());
+		} else if (currentCommand == "C") {
+			 currentPerson.addChild(createRelative());
+		} else if (currentCommand == "I") {
+
+		} else if (currentCommand == "D") {
 		
-	  } else if (currentCommand == "Q") {
-		 cout << endl << "Family Tree Manager Shutting Down..." << endl;
-	  } else
-		 cout << endl << "Invalid Command" << endl;
-	}
+		} else if (currentCommand == "Q") {
+			cout << endl << "Family Tree Manager Shutting Down..." << endl;
+		} else
+			cout << endl << "Invalid Command" << endl;
+		}
 	return EXIT_SUCCESS;
 }
 
@@ -81,9 +112,9 @@ Person createRelative() {
 
 	firstName = lastName = birthDate = "";
 
-	cout << endl << "-------------------" << endl;
-	cout << endl << "| Creating Parent |" << endl;
-	cout << endl << "-------------------" << endl;
+	cout << endl << "---------------------" << endl;
+	cout << endl << "| Creating Relative |" << endl;
+	cout << endl << "---------------------" << endl;
 
 	while (firstName == "") {
 		cout << endl << "First Name: ";
