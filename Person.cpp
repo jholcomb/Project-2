@@ -9,8 +9,10 @@
 //Implements the set and print functions
 
 //Person constructor, could be expanded for defaults
+//Set Pointers to NULL to provide a way to check if they are empty
 Person::Person() {
-
+	mother = NULL;
+	father = NULL;
 }
 
 //Defines all of the Set Functions
@@ -38,12 +40,11 @@ void Person::setGender(string gender) {
 	this->gender = gender;
 }
 
-void Person::setMother(Person& mother) {
-	this->mother = &mother;
-}
-
-void Person::setFather(Person& father) {
-	this->father = &father;
+void Person::setParent(string type, Person& parent) {
+	if (type == "Mother")
+		this->mother = &parent;
+	else
+		this->father = &parent;
 }
 
 void Person::addChild(Person& child) {

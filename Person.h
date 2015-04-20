@@ -17,7 +17,7 @@ private:
 	vector<Person*> children;
 
 public:
-	//Default Constructor
+	//Default Constructor 
 	Person();
 	
 	//Set Functions for Person
@@ -27,8 +27,7 @@ public:
 	void setBirthDate(string birthDate);
 	void setDeathDate(string deathDate);
 	void setGender(string gender);
-	void setMother(Person& mother);
-	void setFather(Person& father);
+	void setParent(string type, Person& mother);
 	void addChild(Person& child);
 
 	//Print Function for Person
@@ -41,9 +40,13 @@ public:
 	string getBirthDate()  { return birthDate;}
 	string getDeathDate()  { return deathDate;}
 	string getGender()     { return gender;}
-	Person getMother()     { return *mother;}
-	Person getFather()     { return *father;}
 	vector<Person*>* getChildren() { return &children;}
+	Person* getParent(string type) {
+		if (type == "Mother") 
+			return mother;
+		else
+			return father;
+	}
 };
  
 #endif

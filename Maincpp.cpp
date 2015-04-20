@@ -18,6 +18,9 @@ bool isPersonFound(string selectedPerson, map<string,Person>& familyTree, map<st
 void addRelative(map<string,Person>& familyTree);
 void connectRelative(string type, map<string,Person>& familyTree, Person& currentPerson);
 Person createRelative();
+bool hasParent(string type, Person& currentPerson);
+string getConnectingChoice(string type, Person& currentPerson);
+void performChoiceOne(string type, Person& currentPerson, map<string,Person>& familyTree, map<string, Person>::iterator& it);
 
 int main(int argCount, char *argValues[]) {
 	map <string, Person> familyTree;
@@ -31,6 +34,11 @@ int main(int argCount, char *argValues[]) {
 	currentCommand = "";
 
 	while (currentCommand != "Q") {
+		currentCommand = "";
+		cout << endl << "---------------------" << endl;
+		cout << endl << "|  Modifying Stage  |" << endl;
+		cout << endl << "---------------------" << endl;
+
 		cout << endl << "What person would you like to modify (first name, last name, birthday)?"; 
 		getline(cin, selectedPerson);
 
@@ -100,7 +108,7 @@ void addPersonToTree(map<string,Person>& familyTree, Person& currentPerson) {
 	lastName  = currentPerson.getLastName();
 	birthDate = currentPerson.getBirthDate();
 	familyTree[firstName + ", " + lastName + ", " + birthDate] = currentPerson;
-	cout << endl << "   [2] " + currentPerson.getFirstName() + " " + currentPerson.getLastName() <<
+	cout << endl << "   * " + currentPerson.getFirstName() + " " + currentPerson.getLastName() <<
 		" was added to the Family Tree." << endl;
 }
 
@@ -146,7 +154,7 @@ Person createRelative() {
 	relative.setGender(gender);
 
 	cout << endl << "The following steps were completed:" << endl;
-	cout << endl << "   [1] Person " + relative.getFirstName() + " " + relative.getLastName() + " was created." << endl;
+	cout << endl << "   * Person " + relative.getFirstName() + " " + relative.getLastName() + " was created." << endl;
 	return relative;
 }
 
@@ -160,6 +168,7 @@ bool isPersonFound(string selectedPerson, map<string,Person>& familyTree, map<st
 
 //The person that was requested did not exist, prompt the user and ask
 //if they would like to create a new person and add it to the Family Tree
+
 void addRelative(map<string,Person>& familyTree) {
 	string response;
 	string firstName, lastName, birthDate;
@@ -172,39 +181,101 @@ void addRelative(map<string,Person>& familyTree) {
 		addPersonToTree(familyTree, currentPerson);
 	} 
 }
+
+//currentPerson:  The current person that the user has selected/working on.
+//it->second the iterator pointer to Mother, Father or Child to be added.
+//Choice 1:  Allows an existing a Mother/Father/Child to be connected to currentPerson
+//Choice 2:  Allows the user to create a new Person to represent the Mother/Father/Child to be added
+
 void connectRelative(string type, map<string,Person>& familyTree, Person& currentPerson) {
 	string choice, connection;
-	Person relative;
 	map<string, Person>::iterator it;
 
+	cout << endl << "-------------------" << endl;
+	cout << endl << "   Adding " + type  << endl;
+	cout << endl << "-------------------" << endl;
+
 	cout << endl << "Enter one of the following connecting methods (1 or 2):" << endl;
-	cout << "\t" << "[1] Add an existing " + type + " to " + currentPerson.getFirstName() + " " + currentPerson.getLastName() + "." << endl;
-	cout << "\t" << "[2] Create a " + type + " to add to " + currentPerson.getFirstName() + " " + currentPerson.getLastName() + "." << endl;
+	cout << "   " << "[1] Add an existing " + type + " to " + currentPerson.getFirstName() + " " + currentPerson.getLastName() + "." << endl;
+	cout << "   " << "[2] Create a " + type + " to add to " + currentPerson.getFirstName() + " " + currentPerson.getLastName() + "." << endl;
 	getline(cin, choice);
-	
-	if (choice == "1") {
-		cout << endl << "What " + type + " would you like to add (first name, last name, birthday)?"; 
-		getline(cin, connection);
-		if (isPersonFound(connection, familyTree, it) == true) {
-			if (type == "Mother") {
-				relative = it->second;
-				relative.addChild(currentPerson);
-				addPersonToTree(familyTree, relative);
-				currentPerson.setMother(relative);
+
+
+	//The user wishes to add a parent and the currentPerson doe not have a mother/father.
+	//Allow for Choices 1 and 2
+	if (type == "Father" || type == "Mother") {
+		if (!hasParent(type, currentPerson)) {
+			if (choice == "1") {
+				performChoiceOne(type, currentPerson, familyTree, it);
+			}
+		} else 
+			cout << endl << "Sorry, but " + currentPerson.getFirstName() + " " + currentPerson.getLastName() + " already has " + type + ", " + (*currentPerson.getParent(type)).getFirstName() + " " <<
+				(*currentPerson.getParent(type)).getLastName() << endl;
+	} else if (type == "Child") {
+		if (choice == "1") {
+			performChoiceOne(type, currentPerson, familyTree, it);
+		}
+	}
+
+	/*
+			} else if (type == "Child-Of-Mother") {
+				it->second.setMother(currentPerson);
+				currentPerson.addChild(it->second);
 				addPersonToTree(familyTree, currentPerson);
-			} else if (type == "Father") {
-				relative = it->second;
-				relative.addChild(currentPerson);
-				addPersonToTree(familyTree, relative);
-				currentPerson.setFather(relative);
-				addPersonToTree(familyTree, currentPerson);
-			} else if (type == "Child") {
-				relative = it->second;
-				currentPerson.addChild(relative);
+			} else if (type == "Child-Of-Father") {
+				it->second.setFather(currentPerson);
+				currentPerson.addChild(it->second);
 				addPersonToTree(familyTree, currentPerson);
 			}
 
-		}
-	}
+		} */
+}
+
+bool hasParent(string type, Person& currentPerson) {
+	if (currentPerson.getParent(type) != NULL) 
+		return true;
+	else 
+		return false;
+}
+
+void performChoiceOne(string type, Person& currentPerson, map<string,Person>& familyTree, map<string, Person>::iterator& it) {
+	string connection;
+	
+	cout << endl << "What " + type + " would you like to add (first name, last name, birthday)?"; 
+	getline(cin, connection);
+
+	if (isPersonFound(connection, familyTree, it) == true) {
+		if (type == "Mother" || "Father") {
+			//The Parent
+			it->second.addChild(currentPerson);
+			//The Child
+			currentPerson.setParent(type, it->second);
+		} else if (type == "Child") {
+			//currentPerson is the Parent in this case and it->second it the Child that was searched
+			//We need to check to see if the child already has a mother or father before adding
+			if (currentPerson.getGender() == "M" && it->second.getParent("Father") == NULL) {
+				it->second.setParent("Father", currentPerson);
+				currentPerson.addChild(it->second);
+			} else if (currentPerson.getGender() == "F" && it->second.getParent("Mother") == NULL) {
+				it->second.setParent("Mother", currentPerson);
+				currentPerson.addChild(it->second);
+			} else {
+				cout << endl << "Sorry but " + it->second.getFirstName() + " " + it->second.getLastName() + " " 
+					+ "already has the type of parent you are trying to add." << endl;
+				return;
+			}
+
+		} 
+		it = familyTree.find(currentPerson.getFirstName() + ", " + currentPerson.getLastName() + ", " + currentPerson.getBirthDate());
+		it->second = currentPerson;
+		cout << endl << "The following steps were completed:" << endl;
+		cout << "   * " + currentPerson.getFirstName() + " " + currentPerson.getLastName() + " was added as a child of " 
+			 << (*currentPerson.getParent(type)).getFirstName() + " " + (*currentPerson.getParent(type)).getLastName() + "." << endl; 
+	} else
+		cout << endl << "No " + type + " with the entered criteria existed, nothing was done..." << endl;
+}
+
+void choiceTwo() {
+
 }
 
