@@ -40,7 +40,8 @@ public:
 	string getBirthDate()  { return birthDate;}
 	string getDeathDate()  { return deathDate;}
 	string getGender()     { return gender;}
-	vector<Person*>* getChildren() { return &children;}
+	int getNumChildren()   { return children.size();}
+	vector<Person*> getChildren() { return children;}
 	Person* getParent(string type) {
 		if (type == "Mother") 
 			return mother;
