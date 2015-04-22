@@ -42,6 +42,7 @@ public:
 	string getGender()     { return gender;}
 	int getNumChildren()   { return children.size();}
 	vector<Person*> getChildren() { return children;}
+
 	Person* getParent(string type) {
 		if (type == "Mother") 
 			return mother;
